@@ -21,7 +21,7 @@ from tqdm import tqdm
 class work_file():
 
     def __init__(self, file_path: str, lang: str):
-        #Принимает путь к обрабатываемому файлу и язык файла в виде строк
+        #Принимает путь к обрабатываемому файлу и язык исходного файла в виде строк
 
         file_dir_index = file_path.rfind('\\')+1
 
@@ -103,8 +103,11 @@ class work_file():
             img_page = Image(image=im)
             img_bloobs.append(img_page.make_blob('jpeg'))
 
-        # ? Блок кода выше создает блобы, которые по сути являются побайтовым представлением страниц файла, записанным в строчку. Может существует более простой способ сделать побайтовое представление страниц?
-        
+        """
+        ? Блок кода выше создает блобы, которые по сути являются побайтовым представлением страниц файла, 
+        записанным в строчку. Может существует более простой способ сделать побайтовое представление страниц?
+        """
+
         print("Фаил \"{0}.pdf\" подготовлен для извлечения текста".format(self.name), end='\n\n')
 
         raw_text = []
@@ -199,6 +202,13 @@ def spell_text(_work_file):
 # Методы, относящиеся к замене аббривиатур в тексте
 
 def ABBREVS_to_termins(_work_file):
+    """
+    Интерфейс декодера аббривиатур в термины. Декодер находит все аббривеатуры в тексте,
+    затем находит соответствующие им термины, а потом заменяет те аббревиатуры,
+    которым был найден соответствующий термин. Алгоритм не идеален, не всегда находит все аббревиатуры,
+    не всегда подбирает правильные термины к аббревиатурам.
+    Возвращает измененный текст.
+    """
     ABBREVS = _ABBREV_parser(_work_file)
     ABBREVS_and_termins = _ABBREV_and_termin(_work_file, ABBREVS)
     changed_text = _change_ABBREVS_on_termins(_work_file, ABBREVS_and_termins)
@@ -240,7 +250,8 @@ def _ABBREV_and_termin(_work_file, ABBREVS: list):
             if n == 1:
                 pattern += r'(\"|\')?' + suff + r'(\b((?i)' + symbol + r')[\S]+)\s'
             else:
-                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
+                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' 
+                                + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
         pattern += r'\(' + ABBREV + r'\))'
         termin = re.findall(pattern, text)
         termins[ABBREV] = termin

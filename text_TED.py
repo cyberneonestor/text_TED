@@ -250,8 +250,8 @@ def _ABBREV_and_termin(_work_file, ABBREVS: list):
             if n == 1:
                 pattern += r'(\"|\')?' + suff + r'(\b((?i)' + symbol + r')[\S]+)\s'
             else:
-                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' 
-                                + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
+                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' \
+                        + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
         pattern += r'\(' + ABBREV + r'\))'
         termin = re.findall(pattern, text)
         termins[ABBREV] = termin

@@ -23,7 +23,7 @@ class work_file():
     def __init__(self, file_path: str, lang: str):
         #Принимает путь к обрабатываемому файлу и язык исходного файла в виде строк
 
-        file_dir_index = file_path.rfind('\\')+1
+        file_dir_index = file_path.rfind('/')+1
 
         self.path = file_path
         self.dir = file_path[:file_dir_index]
@@ -75,10 +75,18 @@ class work_file():
 
         print("Пристапаю к извлечению текста из файла \"{0}.txt\"".format(self.name), end='\n')
 
-        with open(self.path, 'r', encoding='utf-8') as f_text:
-            for string in tqdm(f_text, desc='Прогресс обработки файла '):
-                self.text.append(string)
+        encoding = ['utf-8', 'windows-1251', 'ASCII', 'US-ASCII', 'Big5', 'cp500', 'utf-16', 'GBK']
 
+        for enc in encoding:
+            try:
+                with open(self.path, 'r', encoding=enc) as f_text:
+                    for string in tqdm(f_text, desc='Прогресс обработки файла '):
+                        self.text.append(string)
+            except (UnicodeDecodeError, LookupError):
+                pass
+            else:
+                break
+        
         print("Текст из файла \"{0}.txt\" извлечен".format(self.name), end='\n')
 
         return self.text
@@ -97,11 +105,11 @@ class work_file():
         img_jpeg = img.convert('jpeg')
 
         # Подумать, нужно ли на этом месте сделать не список, а генератор
-        img_bloobs = []
+        img_bloobs = (Image(image=im).make_blob('jpeg') for im in img_jpeg.sequence)
 
-        for im in img_jpeg.sequence:
-            img_page = Image(image=im)
-            img_bloobs.append(img_page.make_blob('jpeg'))
+        #for im in img_jpeg.sequence:
+        #    img_page = Image(image=im)
+        #    img_bloobs.append(img_page.)
 
         """
         ? Блок кода выше создает блобы, которые по сути являются побайтовым представлением страниц файла, 
@@ -123,7 +131,7 @@ class work_file():
             page_num += 1
             print("Распознан текст на странице {0}".format(page_num), end='\n\n')
 
-        self.text = self._text_pdf_modify(raw_text)
+        self.text = self.text_pdf_modify(raw_text)
 
         print("Текст из файла \"{0}.pdf\" распознан и извлечен".format(self.name), end='\n\n')
 

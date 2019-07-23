@@ -73,7 +73,7 @@ class work_file():
         """
         self.text = []
 
-        print("Пристапаю к извлечению текста из файла \"{0}.txt\"".format(self.name), end='\n')
+        print("Пристапаю к извлечению текста из файла \"{0}.{1}\"".format(self.name, self.type), end='\n')
 
         encoding = ['utf-8', 'windows-1251', 'ASCII', 'US-ASCII', 'Big5', 'cp500', 'utf-16', 'GBK']
 
@@ -87,41 +87,29 @@ class work_file():
             else:
                 break
         
-        print("Текст из файла \"{0}.txt\" извлечен".format(self.name), end='\n')
+        print("Текст из файла \"{0}.{1}\" извлечен".format(self.name, self.type), end='\n')
 
         return self.text
 
 
     def _get_text_PDF(self):
         """ Распознает текст из файла в формате .pdf , 
-            вызывает функцию text_pdf_modify, удаляющую лишние переносы строк из текста,
+            вызывает функцию remove_line_breaks, удаляющую лишние переносы строк из текста,
             записывает полученный откоректированный список строк в аттрибут text.
 
         """
         # Придумать как получать не все станицы из файла сразу, а по одной, то есть получить объект в формате "генератора"
-        # Есть конструкция: img_jpeg = img.convert('jpeg')  . Подумать, нужно ли ее применять 
 
         img = Image(filename=self.path, resolution=300)   # Извлекаю страницы из файла PDF в формате "jpeg", разрешением 300dpi
         img_jpeg = img.convert('jpeg')
-
-        # Подумать, нужно ли на этом месте сделать не список, а генератор
         img_bloobs = (Image(image=im).make_blob('jpeg') for im in img_jpeg.sequence)
 
-        #for im in img_jpeg.sequence:
-        #    img_page = Image(image=im)
-        #    img_bloobs.append(img_page.)
-
-        """
-        ? Блок кода выше создает блобы, которые по сути являются побайтовым представлением страниц файла, 
-        записанным в строчку. Может существует более простой способ сделать побайтовое представление страниц?
-        """
-
-        print("Фаил \"{0}.pdf\" подготовлен для извлечения текста".format(self.name), end='\n\n')
+        print("Фаил \"{0}.{1}\" подготовлен для извлечения текста".format(self.name, self.type), end='\n\n')
 
         raw_text = []
         page_num = 0
 
-        print("Начинаю распознование текста в файле \"{0}.pdf\"".format(self.name), end='\n\n')
+        print("Начинаю распознование текста в файле \"{0}.{1}\"".format(self.name, self.type), end='\n\n')
 
         for img_blob in img_bloobs:
             page_image = PI.open(io.BytesIO(img_blob))
@@ -131,14 +119,14 @@ class work_file():
             page_num += 1
             print("Распознан текст на странице {0}".format(page_num), end='\n\n')
 
-        self.text = self.text_pdf_modify(raw_text)
+        self.text = self.remove_line_breaks(raw_text)
 
-        print("Текст из файла \"{0}.pdf\" распознан и извлечен".format(self.name), end='\n\n')
+        print("Текст из файла \"{0}.{1}\" распознан и извлечен".format(self.name, self.type), end='\n\n')
 
         return self.text
 
 
-    def text_pdf_modify(self, text: list):
+    def remove_line_breaks(self, text: list):
         """ Удаляет лишние переносы строк из текста 
             (чтобы абзацы были записаны одной строкой, так они будут правильно обработаны в дальнейшем)
 
@@ -158,7 +146,7 @@ class work_file():
 
             mod_text.append(mod_page_text)
 
-        print('Текст извлеченный из файла \"{0}.pdf\" откорректирован'.format(self.name), end='\n\n')
+        print('Текст извлеченный из файла \"{0}.{1}\" откорректирован'.format(self.name, self.type), end='\n\n')
 
         return mod_text
 

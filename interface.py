@@ -11,7 +11,7 @@ def files_from_pathfile():
             paths.append(path)
     return paths
 
-path = [r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/initial_text_in_pdf_for_tests.pdf']
+path = [r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/text_with_line_breaks.txt']
 
 for f in path:
     work_file = text_TED.work_file(f, 'eng')

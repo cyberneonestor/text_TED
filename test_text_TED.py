@@ -1,6 +1,10 @@
 from text_TED import *
 
 class TestWorkFile:
+"""
+Тестируем методы, относящиеся к получению текста из файлов,
+а так же относящиеся к первичной модификации текста
+"""
 
     def setup_method(self, method):
         self.file_ = work_file(r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/initial_text_in_txt_for_tests.txt', 'eng')
@@ -22,3 +26,15 @@ class TestWorkFile:
         pdf_file = work_file(r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/initial_text_in_pdf_for_tests.pdf', 'eng')
         pdf_file.get_text()
         assert pdf_file.text == self.rav_text_for_test
+
+    def test_remove_line_beaks(self):
+        text_with_line_breaks = work_file(r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/text_with_line_breaks.txt', 'eng')
+        text_with_line_breaks.get_text()
+        text_with_line_breaks.text = [''.join(text_with_line_breaks.text)]
+        assert text_with_line_breaks.remove_line_breaks(text_with_line_breaks.text) == self.rav_text_for_test
+
+
+class TestABBREVStoTermins:
+
+    def test_ABBREV_parser():
+        pass

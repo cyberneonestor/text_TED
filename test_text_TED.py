@@ -1,10 +1,11 @@
 from text_TED import *
+from text_TED import _ABBREV_parser as ABBREV_parser, _ABBREV_and_termin as ABBREV_and_termin, _change_ABBREVS_on_termins as change_ABBREVS
 
 class TestWorkFile:
-"""
-Тестируем методы, относящиеся к получению текста из файлов,
-а так же относящиеся к первичной модификации текста
-"""
+    """
+    Тестируем методы, относящиеся к получению текста из файлов,
+    а так же относящиеся к первичной модификации текста
+    """
 
     def setup_method(self, method):
         self.file_ = work_file(r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/initial_text_in_txt_for_tests.txt', 'eng')
@@ -36,5 +37,26 @@ class TestWorkFile:
 
 class TestABBREVStoTermins:
 
-    def test_ABBREV_parser():
-        pass
+    def setup_method(self, method):
+        self.file_ = work_file(r'E:/Studing/Programming/Python/Projects/PDF_parser_and_tranlator/main_version/test/initial_text_in_txt_for_tests.txt', 'eng')
+        self.file_.text = ['united nations (UN), test driven development (TDD), abra cadabra babra mokabra (ACBM), Russian Federation (RF)']
+
+    def test_ABBREV_parser(self):
+        assert ABBREV_parser(self.file_) == ['(UN)', '(TDD)', '(ACBM)', '(RF)']
+
+    def test_ABBREV_and_termin(self):
+        assert ABBREV_and_termin(self.file_, ['(UN)', '(TDD)', '(ACBM)', '(RF)']) == {
+            'UN': 'united nations',
+            'TDD': 'test driven development',
+            'ACBM': 'abra cadabra babra mokabra',
+            'RF': 'Russian Federation'
+        }
+
+    def test_change_ABBREVS(self):
+        ABBREVS = {
+            'UN': 'united nations',
+            'TDD': 'test driven development',
+            'ACBM': 'abra cadabra babra mokabra',
+            'RF': 'Russian Federation'
+        }
+        assert change_ABBREVS(self.file_, ABBREVS) == ['united nations (united nations), test driven development (test driven development), abra cadabra babra mokabra (abra cadabra babra mokabra), Russian Federation (Russian Federation)\n']

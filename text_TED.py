@@ -16,14 +16,17 @@ from PIL import Image as PI
 from wand.image import Image   # У библиотеки Wand существует несколько обязательных зависиместей, которые необходимо устанавливать в операционную систему: ImageMagic(собственно wang работает через него) и Ghostscript(нужен для обработки PDF)
 from tqdm import tqdm
 
-# Класс work_file определяет объект файла, с которым будем работать
+# Класс SetFile создает объект файла, с которым будем работать
 
-class work_file():
+class SetFile():
 
     def __init__(self, file_path: str, lang: str):
         #Принимает путь к обрабатываемому файлу и язык исходного файла в виде строк
 
-        file_dir_index = file_path.rfind('/')+1
+        if '/' in file_path:
+            file_dir_index = file_path.rfind('/') + 1
+        else:
+            file_dir_index = file_path.rfind('\\') + 1
 
         self.path = file_path
         self.dir = file_path[:file_dir_index]
@@ -33,7 +36,7 @@ class work_file():
         self.text = []
 
 
-    def get_text(self):
+    def extract_text(self):
         """ В зависимостие от формата файла вызывает функции, 
             извлекающие текст из файла и записывающие полученный текст в виде list'а в аттрибут text
 

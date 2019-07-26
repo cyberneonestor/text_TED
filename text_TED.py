@@ -57,8 +57,8 @@ def text_ted(f, in_lang, out_lang='ru', pref='finally'):
     work_file.extract_text()
     work_file.text = spell_text(_work_file=work_file)
     work_file.text = ABBREVS_to_termins(_work_file=work_file)
-    work_file.text = google_translate_text(_work_file=work_file, out_lang=out_lang)
-    # work_file.text = yandex_translate_text(_work_file=work_file, out_lang=out_lang)
+    # work_file.text = google_translate_text(_work_file=work_file, out_lang=out_lang)
+    work_file.text = yandex_translate_text(_work_file=work_file, out_lang=out_lang)
     work_file.save_text(pref=pref)
 
 def main():
@@ -68,8 +68,6 @@ def main():
     pref = input('Введите произвольный префикс для выходного файла: ')
     text_ted(f=f, in_lang=in_lang, out_lang=out_lang, pref=pref)
 
-if __name__ == '__main__':
-    main()
 
 
 
@@ -331,8 +329,7 @@ def _ABBREV_and_termin(_work_file, ABBREVS: list):
             if n == 1:
                 pattern += r'(\"|\')?' + suff + r'(\b((?i)' + symbol + r')[\S]+)\s'
             else:
-                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' \
-                        + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
+                pattern += suff + r'(((\b((?i)' + symbol + r')[\S]+)\s)|' + r'((\b[\S]+' + symbol + r'[\S]+)\s)|' + r'((\b[\S]+)\s))?'
         pattern += r'\(' + ABBREV + r'\))'
         termin = re.findall(pattern, text)
         termins[ABBREV] = termin
@@ -498,3 +495,7 @@ def google_translate_text2(_work_file, in_lang = 'en', out_lang = 'ru'):
     print('\nПеревод текста из файла {}.{} завершен \n'.format(_work_file.name, _work_file.type))
 
     return translated_text
+
+
+if __name__ == '__main__':
+    main()

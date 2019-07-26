@@ -6,7 +6,11 @@
 автоматического исправления некоторых ошибок распознования текста, удаления лишних переносов, 
 поиска и замены аббревиатур на исходные термины. 
 
-Перевод осуществляется с использованием google либо yandex переводчика.
+Перевод осуществляется с использованием google либо yandex переводчика, соответственно, 
+для проведения перевода требуется подключение к интернету. 
+
+Так же во время перевода должен быть обязательно запущен браузер Tor, 
+необходимый для обхода блокировки множественных запросов google переводчиком.
 
 На вход программы подается путь до переводимого файла.
 
@@ -17,9 +21,22 @@
 
 По умолчанию язык исходных файлов английский, язык перевода - русский.
 
+Для корректной работы скрипта доблжны быть установлены следующие зависимости:
+- ImageMagic (библиотека wang работает через него)
+- Ghostscript (нужен для обработки PDF)
+- Tesseract-ocr (нужен для распознования текста)
+- Браузер Tor (нужен для обхода блокировки доступа к google переводчику)
+
 Используемые функции:
-
-
+- text_ted - основная функция интерфейса, запускающая последовательно другие функции,
+отвечающие за обработку и перевод текста.
+- SetFile - класс-контейнер для обрабатываемых файлов
+- extract_text - извлекает текст из исходного файла
+- spell_text - проверяет текст на наличие ошибок распознования и исправляет их
+- ABBREVS_to_termins - находит и заменяет в тексте аббревиатуры на соответствующие им термины
+- google_translate_text - переводит текст используя google переводчик
+- yandex_translate_text - переводит текст используя yandex переводчик
+- save_text - сохраняет текст в выходной фаил
 """
 
 import text_TED
@@ -31,12 +48,13 @@ def text_ted(f, in_lang, out_lang='ru', pref='finally'):
     параметр - префикс для выходного файла, по умолчаниь равный 'finally'. В результат работы сохраняет в 
     фаил .txt в папке исходного файла.
     '''
-    work_file = text_TED.SetFile(f, 'eng')
+    work_file = text_TED.SetFile(file_path=f, lang=in_lang)
     work_file.extract_text()
-    work_file.text = text_TED.spell_text(work_file)
-    work_file.text = text_TED.ABBREVS_to_termins(work_file)
-    work_file.text = text_TED.google_translate_text(work_file)
-    work_file.save_text(pref)
+    work_file.text = text_TED.spell_text(_work_file=work_file)
+    work_file.text = text_TED.ABBREVS_to_termins(_work_file=work_file)
+    work_file.text = text_TED.google_translate_text(_work_file=work_file, out_lang=out_lang)
+    # work_file.text = text_TED.yandex_translate_text(_work_file=work_file, out_lang=out_lang)
+    work_file.save_text(pref=pref)
 
 def main():
     f = input('Введите абсолютный путь к рабочему файлу: ')

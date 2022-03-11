@@ -13,7 +13,7 @@ googletrans==2.4.0
 httplib2==0.12.1
 idna==2.8
 jamspell==0.0.11
-Pillow==5.4.1
+Pillow==9.0.1
 pyasn1==0.4.5
 pyasn1-modules==0.2.4
 pyaspeller==0.1.0
